@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Китайская кухня · Рощино</title>
+<meta name="description" content="Китайская кухня в Рощино — блюда на вынос и доставка. Бесплатная доставка по Рощино при заказе от 2000 ₽.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&text=%E4%B8%AD%E5%8D%8E%E7%BE%8E%E9%A3%9F%E7%A6%8F&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#9e1b1b;
+  --red-deep:#6e0f12;
+  --red-ink:#b3261e;
+  --gold:#d9a441;
+  --gold-soft:#f0cf7f;
+  --paper:#fbf4e6;
+  --paper-2:#f4e9d2;
+  --ink:#2a1a14;
+  --muted:#7a6558;
+  --line:#e2d2b3;
+  --ok:#2e7d4f;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Manrope",system-ui,sans-serif;
+  color:var(--ink);
+  background:var(--paper);
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(217,164,65,.08), transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(158,27,27,.05), transparent 45%);
+  line-height:1.45;
+  padding-bottom:110px;
+  -webkit-font-smoothing:antialiased;
+}
+.zh{font-family:"Noto Serif SC",serif;font-weight:700}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,textarea,select{font:inherit;color:inherit}
+
+/* demo ribbon */
+.ribbon{
+  background:var(--ink);color:var(--gold-soft);
+  font-size:12.5px;text-align:center;padding:7px 16px;letter-spacing:.02em
+}
+.ribbon b{color:#fff;font-weight:700}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:#f8f2df;color:var(--red-deep)}
+.hero::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:6px;
+  background:linear-gradient(var(--gold) 0 2px,transparent 2px 3px,var(--red) 3px 6px)
+}
+.hero-img{display:block;width:100%;height:230px;object-fit:cover;object-position:85% 60%}
+.hero-inner{max-width:1080px;margin:0 auto;position:relative;z-index:2;padding:0 20px 38px}
+.seal{
+  display:inline-grid;place-items:center;width:62px;height:62px;
+  background:var(--red);border-radius:8px;color:#fff4d6;
+  font-size:22px;line-height:1.05;text-align:center;letter-spacing:.05em;
+  transform:rotate(-4deg);margin:-30px 0 14px;
+  box-shadow:inset 0 0 0 3px var(--red),inset 0 0 0 4px var(--gold-soft),0 4px 12px rgba(110,15,18,.25)
+}
+.hero h1{
+  font-family:"Yeseva One",serif;font-weight:400;
+  font-size:clamp(40px,8vw,72px);line-height:1.02;letter-spacing:.01em;color:var(--red-deep)
+}
+.hero .sub{font-size:clamp(16px,2.4vw,20px);color:#9a6b1f;margin-top:8px;font-weight:700}
+.promo{
+  margin-top:22px;display:inline-flex;align-items:center;gap:12px;
+  background:var(--red);color:#fff;
+  padding:12px 16px;border-radius:12px;max-width:440px;
+  box-shadow:0 6px 18px rgba(110,15,18,.22)
+}
+.promo .big{font-family:"Yeseva One",serif;font-size:28px;color:var(--gold-soft);line-height:1;white-space:nowrap}
+.promo p{font-size:14.5px}
+.hero-meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px 18px;font-size:15px;color:var(--ink);font-weight:600}
+.hero-meta a{color:var(--red-ink);text-decoration:none;font-weight:800;border-bottom:1px dashed rgba(179,38,30,.5)}
+@media (min-width:760px){
+  .hero{
+    background:#f8f2df url("hero.jpg") right center/cover no-repeat;
+    min-height:clamp(440px,46vw,620px);display:flex;align-items:center
+  }
+  .hero-img{display:none}
+  .hero-inner{width:100%;padding:56px 32px 64px}
+  .hero-inner > div{max-width:470px}
+  .seal{margin-top:0}
+}
+/* closed notice */
+.notice{
+  max-width:1080px;margin:16px auto 0;padding:0 16px;display:none
+}
+.notice div{
+  background:#fff4d6;border:1px solid var(--gold);border-radius:12px;
+  padding:12px 14px;font-size:14.5px
+}
+
+/* category nav */
+.cats{
+  position:sticky;top:0;z-index:20;
+  background:rgba(251,244,230,.94);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line)
+}
+.cats-inner{
+  max-width:1080px;margin:0 auto;display:flex;gap:8px;overflow-x:auto;
+  padding:12px 16px;scrollbar-width:none
+}
+.cats-inner::-webkit-scrollbar{display:none}
+.chip{
+  white-space:nowrap;padding:8px 14px;border-radius:999px;
+  border:1px solid var(--line);background:#fff;font-weight:600;font-size:14px;
+  transition:.15s
+}
+.chip.active{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* menu */
+main{max-width:1080px;margin:0 auto;padding:8px 16px 0}
+section.cat{padding-top:26px;scroll-margin-top:64px}
+.cat-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.cat-head h2{font-family:"Yeseva One",serif;font-weight:400;font-size:28px;color:var(--red-deep)}
+.cat-head .rule{flex:1;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (min-width:700px){.grid{grid-template-columns:repeat(3,1fr);gap:16px}}
+@media (min-width:1000px){.grid{grid-template-columns:repeat(4,1fr)}}
+.dish{
+  position:relative;background:#fffdf8;border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:0 2px 8px rgba(110,15,18,.05);transition:box-shadow .2s,border-color .2s
+}
+.dish.in{border-color:var(--gold);box-shadow:0 0 0 2px rgba(217,164,65,.45)}
+.pic{position:relative;aspect-ratio:1/1;background:var(--paper-2)}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.pic.empty{
+  display:grid;place-items:center;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40' viewBox='0 0 80 40'%3E%3Cpath d='M6 28c0-7 8-9 12-5 1-6 11-7 13-1 4-4 11-1 11 5' fill='none' stroke='%23d9a441' stroke-opacity='.3' stroke-width='1.5'/%3E%3C/svg%3E"),
+    var(--paper-2)
+}
+.pic.empty::after{content:"фото скоро";position:absolute;bottom:10px;font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+.num{
+  position:absolute;left:8px;top:8px;min-width:34px;height:34px;padding:0 6px;border-radius:8px;
+  background:var(--red);color:var(--gold-soft);display:grid;place-items:center;
+  font-family:"Yeseva One",serif;font-size:16px;
+  box-shadow:inset 0 0 0 2px var(--red),inset 0 0 0 3px rgba(240,207,127,.6),0 2px 6px rgba(0,0,0,.18)
+}
+.pic.empty .num{position:static;min-width:56px;height:56px;font-size:24px;border-radius:10px}
+.info{padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px;flex:1}
+.dish h3{font-size:14.5px;font-weight:700;line-height:1.3}
+.dish .desc{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+.dish-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.price{font-weight:800;font-size:16.5px;color:var(--red-ink)}
+.add{
+  background:var(--red);color:#fff;border-radius:10px;padding:8px 12px;font-weight:700;font-size:14px;
+  transition:transform .1s
+}
+.add:active{transform:scale(.96)}
+.stepper{display:flex;align-items:center;background:var(--paper-2);border-radius:10px;overflow:hidden}
+.stepper button{width:34px;height:36px;font-size:20px;font-weight:700;color:var(--red)}
+.stepper span{min-width:22px;text-align:center;font-weight:800}
+@media (max-width:380px){.dish-foot .add{width:100%}}
+
+.foot-info{
+  max-width:1080px;margin:40px auto 0;padding:24px 16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:14px;display:grid;gap:6px
+}
+.foot-info a{color:var(--red-ink);font-weight:700;text-decoration:none}
+.foot-info .made{margin-top:10px;font-size:12.5px}
+
+/* cart bar */
+.bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  background:var(--ink);color:#fff;
+  transform:translateY(110%);transition:transform .25s ease
+}
+.bar.show{transform:none}
+.bar-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.bar-info{flex:1;min-width:0}
+.bar-sum{font-weight:800;font-size:18px}
+.bar-hint{font-size:12.5px;color:var(--gold-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progress{height:4px;background:rgba(255,255,255,.15);border-radius:4px;margin-top:6px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--gold);width:0;transition:width .3s}
+.bar .go{background:var(--gold);color:var(--ink);padding:12px 18px;border-radius:12px;font-weight:800;white-space:nowrap}
+
+/* sheet */
+.overlay{position:fixed;inset:0;background:rgba(30,12,8,.55);z-index:40;display:none}
+.overlay.show{display:block}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;max-height:92vh;overflow:auto;
+  background:var(--paper);border-radius:20px 20px 0 0;
+  transform:translateY(105%);transition:transform .28s ease;
+  max-width:620px;margin:0 auto
+}
+.sheet.show{transform:none}
+.sheet-head{
+  position:sticky;top:0;background:var(--paper);padding:16px 18px 12px;
+  display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);z-index:2
+}
+.sheet-head h3{font-family:"Yeseva One",serif;font-weight:400;font-size:24px;color:var(--red-deep)}
+.x{width:36px;height:36px;border-radius:50%;background:var(--paper-2);font-size:20px}
+.sheet-body{padding:14px 18px 24px}
+.line{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.line .n{color:var(--red-ink);font-weight:800;min-width:34px;font-size:14px}
+.line .t{flex:1;font-size:14.5px;font-weight:600}
+.line .s{font-weight:800;min-width:70px;text-align:right}
+.total{display:flex;justify-content:space-between;font-weight:800;font-size:19px;margin:14px 0 4px}
+.deliv-note{font-size:13.5px;color:var(--ok);font-weight:600}
+.deliv-note.warn{color:var(--red-ink)}
+.form{display:grid;gap:12px;margin-top:18px}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--paper-2);border-radius:12px;padding:4px}
+.seg button{padding:10px;border-radius:9px;font-weight:700;font-size:14.5px;color:var(--muted)}
+.seg button.on{background:#fff;color:var(--red-deep);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+label{display:grid;gap:5px;font-size:13px;font-weight:700;color:var(--muted)}
+input,textarea,select{
+  width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:16px
+}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+.err{border-color:var(--red-ink)!important;background:#fff5f4}
+.submit{
+  margin-top:6px;background:var(--red);color:#fff;padding:15px;border-radius:13px;
+  font-weight:800;font-size:17px;width:100%
+}
+.small-print{font-size:12.5px;color:var(--muted);text-align:center;margin-top:8px}
+
+/* success */
+.done{text-align:center;padding:10px 0}
+.done .ok{
+  width:68px;height:68px;border-radius:50%;margin:6px auto 12px;background:var(--red);color:var(--gold-soft);
+  display:grid;place-items:center;font-size:30px
+}
+.done h4{font-family:"Yeseva One",serif;font-weight:400;font-size:24px;color:var(--red-deep)}
+.done p{color:var(--muted);font-size:14.5px;margin-top:6px}
+.msg-label{margin:20px 0 8px;font-size:13px;font-weight:700;color:var(--muted);text-align:left}
+.msg{
+  text-align:left;white-space:pre-wrap;font-size:14px;background:#fff;border:1px solid var(--line);
+  border-left:4px solid var(--gold);border-radius:12px;padding:14px;line-height:1.5
+}
+.ghost{margin-top:14px;padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;font-weight:700;width:100%}
+</style>
+</head>
+<body>
+
+<div class="ribbon">Демо-версия · заказы с этой страницы <b>никуда не отправляются</b></div>
+
+<header class="hero">
+  <img class="hero-img" src="hero.jpg" alt="Китайская пагода в облаках">
+  <div class="hero-inner">
+    <div>
+      <div class="seal zh">中华<br>美食</div>
+      <h1>Китайская<br>кухня</h1>
+      <div class="sub">Блюда на вынос и доставка · Рощино</div>
+      <div class="promo">
+        <span class="big">2000 ₽</span>
+        <p>при заказе от этой суммы доставка по Рощино бесплатно</p>
+      </div>
+      <div class="hero-meta">
+        <span>Заказы принимаем до 20:00</span>
+        <a href="tel:89502950679">8 950 295-06-79</a>
+        <a href="tel:89089742770">8 908 974-27-70</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="notice" id="notice"><div>Сейчас после 20:00, поэтому заказ можно оформить на завтра. Укажите удобное время в форме.</div></div>
+
+<nav class="cats"><div class="cats-inner" id="cats"></div></nav>
+
+<main id="menu"></main>
+
+<div class="foot-info">
+  <div>Доставка по Рощино бесплатно при заказе от 2000 ₽. Самовывоз в любое время до 20:00.</div>
+  <div>Телефоны: <a href="tel:89502950679">8 950 295-06-79</a>, <a href="tel:89089742770">8 908 974-27-70</a></div>
+  <div class="made">Сайт сделан студией tk-webb.ru</div>
+</div>
+
+<div class="bar" id="bar">
+  <div class="bar-inner">
+    <div class="bar-info">
+      <div class="bar-sum" id="barSum">0 ₽</div>
+      <div class="bar-hint" id="barHint"></div>
+      <div class="progress"><i id="barProg"></i></div>
+    </div>
+    <button class="go" id="openCart">Оформить</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet-head"><h3 id="sheetTitle">Ваш заказ</h3><button class="x" id="closeCart" aria-label="Закрыть">×</button></div>
+  <div class="sheet-body" id="sheetBody"></div>
+</div>
+
+<script>
+const FREE = 2000;
+const MENU = [
+ {cat:"Салаты и закуски", items:[
+  ["1","Салат «по-харбински»",550,"капуста, огурцы, морковь, древесные грибы, фунчоза, специи, острое масло"],
+  ["2","Салат из одуванчиков",550],
+  ["3","Кальмар с яйцом и майонезом",850],
+  ["4","Кальмар",700,"огурец, морковь по-китайски"],
+  ["5","Салат из огурцов с языком",750],
+  ["6","Салат из огурцов с говядиной",850],
+  ["7","Салат из огурцов и свиной рульки",750],
+  ["10","Говядина с солёным огурцом и майонезом",750],
+  ["11","Салат «Фирменный»",520,"картофель соломкой, арахис"],
+  ["12","Салат с брокколи, помидором, яйцом, майонезом",650]
+ ]},
+ {cat:"Свинина", items:[
+  ["13","Стрелки чеснока со свининой",680],
+  ["16","Свинина с шампиньонами",750],
+  ["21","Мясо по-харбински",750],
+  ["22","Свинина жареная в кисло-сладком соусе",700,"гуо-бао-жоу"],
+  ["23","Свинина жареная с ананасами в кисло-сладком соусе",750],
+  ["24","Свинина в кляре в соевом соусе",750],
+  ["25","Свинина в соевом соусе с овощами",750],
+  ["26","Свинина соломкой в кисло-сладком соусе",750],
+  ["27","Свинина соломкой, жаренная с сушёным острым перцем",750],
+  ["28","Свинина с картофелем, сладким перцем и морковью",700,"в соевом соусе"],
+  ["29","Рёбрышки свиные с зелёным перцем и морковью",700,"тушёные в соевом соусе"],
+  ["29/1","Рёбрышки в кисло-сладком соусе",680],
+  ["30","Рёбрышки свиные с картофелем",750],
+  ["31","Шашлычки из свинины",750],
+  ["32","Рулька в соевом соусе",850],
+  ["50","Свинина с кальмаром в соевом соусе",800],
+  ["64","Свинина в сухарях",750]
+ ]},
+ {cat:"Курица", items:[
+  ["34","Курица с овощами в соевом соусе",700],
+  ["35","Куриное филе с овощами в кисло-сладком соусе",750],
+  ["36","Куриное филе с овощами в кисло-сладком соусе, острое",700],
+  ["37","Куриное филе в кляре соломкой",750],
+  ["38","Куриные крылышки в соевом соусе",700],
+  ["39","Куриные крылышки по-харбински",700],
+  ["40","Куриное филе в сухарях",700],
+  ["41","Куриные крылышки в сухарях",700],
+  ["42","Курица с ананасом в кисло-сладком соусе",750],
+  ["43","Шашлычки из курицы",700],
+  ["44","Куриные сердечки в соевом соусе",700],
+  ["45","Куриные сердечки с острым перцем",700]
+ ]},
+ {cat:"Говядина", items:[
+  ["8","Стрелки чеснока, жаренные с говядиной",750],
+  ["33","Язык говяжий в соевом соусе",750],
+  ["46","Говядина в соевом соусе с овощами",850],
+  ["47","Говядина соломкой со стрелками чеснока и острым перцем",800],
+  ["48","Говядина с луком в соевом соусе",850],
+  ["49","Говядина с картофелем в соевом соусе",800]
+ ]},
+ {cat:"Рыба и морепродукты", items:[
+  ["51","Кольца кальмара в сухарях",800],
+  ["52","Кольца кальмара в кляре",800],
+  ["53","Кальмар с овощами в соевом соусе",850],
+  ["54","Морепродукты в соевом соусе",1350,"кальмар, гребешок, креветка"],
+  ["55","Минтай в соевом соусе",750],
+  ["56","Минтай в кисло-сладком соусе",750],
+  ["57","Минтай в сухарях",700],
+  ["58","Кета в соевом соусе",750],
+  ["59","Кета в кисло-сладком соусе",750],
+  ["60","Кета в кляре",750]
+ ]},
+ {cat:"Овощи и баклажаны", items:[
+  ["9","Баклажаны с говядиной",800],
+  ["14","Баклажаны кусочками с картофелем и овощами",650],
+  ["15","Баклажаны кусочками со свининой",750],
+  ["17","Баклажаны ломтиками в кисло-сладком соусе",650],
+  ["19","Баклажаны фаршированные в кляре",650],
+  ["20","Картофель фри",550]
+ ]},
+ {cat:"Рис и лапша", items:[
+  ["18","Фунчоза со свининой в соевом соусе",550],
+  ["61","Рис с овощами",500],
+  ["62","Рис с морепродуктами",700],
+  ["63","Рис с говядиной и стрелками чеснока",500]
+ ]},
+ {cat:"Десерты", items:[
+  ["65","Ананасы в карамели",500],
+  ["66","Яблоки в карамели",500],
+  ["67","Бананы в карамели",500],
+  ["68","Чак-чак",500]
+ ]}
+];
+
+const byId = {};
+MENU.forEach(c => c.items.forEach(([id,name,price,desc]) => byId[id] = {id,name,price,desc}));
+
+let cart = {};
+try { cart = JSON.parse(localStorage.getItem("cart") || "{}") || {}; } catch(e) {}
+const save = () => { try { localStorage.setItem("cart", JSON.stringify(cart)); } catch(e) {} };
+const rub = n => n.toLocaleString("ru-RU") + " ₽";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const slug = i => "cat" + i;
+
+// render menu
+const menuEl = document.getElementById("menu");
+const catsEl = document.getElementById("cats");
+MENU.forEach((c, i) => {
+  catsEl.insertAdjacentHTML("beforeend", `<button class="chip" data-t="${slug(i)}">${c.cat}</button>`);
+  menuEl.insertAdjacentHTML("beforeend", `
+    <section class="cat" id="${slug(i)}">
+      <div class="cat-head"><h2>${c.cat}</h2><span class="rule"></span></div>
+      <div class="grid">${c.items.map(([id,name,price,desc]) => `
+        <article class="dish" data-id="${id}">
+          <div class="pic"><img src="photos/${id.replace("/", "-")}.jpg" alt="${name}" loading="lazy" onerror="this.parentNode.classList.add('empty');this.remove()"><span class="num">${id}</span></div>
+          <div class="info">
+            <div><h3>${name}</h3>${desc ? `<div class="desc">${desc}</div>` : ""}</div>
+            <div class="dish-foot"><span class="price">${rub(price)}</span><span class="ctl"></span></div>
+          </div>
+        </article>`).join("")}
+      </div>
+    </section>`);
+});
+
+catsEl.addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  document.getElementById(b.dataset.t).scrollIntoView({behavior:"smooth"});
+});
+
+// active chip on scroll
+const chips = [...catsEl.children];
+const io = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (en.isIntersecting) {
+      chips.forEach(ch => ch.classList.toggle("active", ch.dataset.t === en.target.id));
+      const act = catsEl.querySelector(".active");
+      if (act) act.scrollIntoView({block:"nearest", inline:"center", behavior:"smooth"});
+    }
+  });
+}, {rootMargin:"-45% 0px -50% 0px"});
+document.querySelectorAll("section.cat").forEach(s => io.observe(s));
+
+function ctlHtml(id) {
+  const q = cart[id] || 0;
+  return q
+    ? `<div class="stepper"><button data-a="-" aria-label="Меньше">−</button><span>${q}</span><button data-a="+" aria-label="Больше">+</button></div>`
+    : `<button class="add" data-a="+">В заказ</button>`;
+}
+
+function change(id, d) {
+  const q = (cart[id] || 0) + d;
+  if (q <= 0) delete cart[id]; else cart[id] = q;
+  save(); refresh();
+}
+
+menuEl.addEventListener("click", e => {
+  const b = e.target.closest("[data-a]"); if (!b) return;
+  change(b.closest(".dish").dataset.id, b.dataset.a === "+" ? 1 : -1);
+});
+
+const total = () => Object.entries(cart).reduce((s,[id,q]) => s + (byId[id] ? byId[id].price * q : 0), 0);
+const count = () => Object.values(cart).reduce((a,b) => a + b, 0);
+
+function refresh() {
+  document.querySelectorAll(".dish").forEach(el => {
+    const id = el.dataset.id;
+    el.querySelector(".ctl").innerHTML = ctlHtml(id);
+    el.classList.toggle("in", !!cart[id]);
+  });
+  const t = total();
+  document.getElementById("bar").classList.toggle("show", t > 0);
+  document.getElementById("barSum").textContent = `${rub(t)} · ${count()} шт.`;
+  document.getElementById("barHint").textContent = t >= FREE
+    ? "Доставка по Рощино бесплатно ✓"
+    : `До бесплатной доставки осталось ${rub(FREE - t)}`;
+  document.getElementById("barProg").style.width = Math.min(100, t / FREE * 100) + "%";
+  if (document.getElementById("sheet").classList.contains("show") && !isDone) renderCart();
+}
+
+// cart sheet
+const sheet = document.getElementById("sheet");
+const overlay = document.getElementById("overlay");
+const body = document.getElementById("sheetBody");
+let mode = "delivery", isDone = false;
+const form = {name:"", phone:"", addr:"", time:"", comment:""};
+
+function openSheet() { isDone = false; renderCart(); sheet.classList.add("show"); overlay.classList.add("show"); document.body.style.overflow = "hidden"; }
+function closeSheet() { sheet.classList.remove("show"); overlay.classList.remove("show"); document.body.style.overflow = ""; }
+document.getElementById("openCart").onclick = openSheet;
+document.getElementById("closeCart").onclick = closeSheet;
+overlay.onclick = closeSheet;
+
+function renderCart() {
+  const t = total();
+  if (!t) { body.innerHTML = `<p style="padding:20px 0;color:var(--muted)">Корзина пуста. Добавьте блюда из меню.</p>`; return; }
+  const lines = Object.entries(cart).map(([id,q]) => {
+    const d = byId[id];
+    return `<div class="line" data-id="${id}"><span class="n">№${id}</span><span class="t">${d.name}</span>
+      <div class="stepper"><button data-a="-">−</button><span>${q}</span><button data-a="+">+</button></div>
+      <span class="s">${rub(d.price*q)}</span></div>`;
+  }).join("");
+  let note = "";
+  if (mode === "delivery") note = t >= FREE
+    ? `<div class="deliv-note">Доставка по Рощино бесплатно</div>`
+    : `<div class="deliv-note warn">Добавьте ещё на ${rub(FREE - t)}, и доставка будет бесплатной</div>`;
+  else note = `<div class="deliv-note">Самовывоз, заберёте сами</div>`;
+
+  body.innerHTML = `
+    ${lines}
+    <div class="total"><span>Итого</span><span>${rub(t)}</span></div>
+    ${note}
+    <div class="form">
+      <div class="seg"><button data-m="delivery" class="${mode==="delivery"?"on":""}">Доставка</button><button data-m="pickup" class="${mode==="pickup"?"on":""}">Самовывоз</button></div>
+      <label>Ваше имя<input id="f-name" autocomplete="given-name" value="${esc(form.name)}"></label>
+      <label>Телефон<input id="f-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="8 900 000-00-00" value="${esc(form.phone)}"></label>
+      ${mode==="delivery" ? `<label>Адрес в Рощино<input id="f-addr" autocomplete="street-address" placeholder="Улица, дом" value="${esc(form.addr)}"></label>` : ""}
+      <label>${mode==="delivery" ? "К какому времени привезти" : "Когда заберёте"}<input id="f-time" placeholder="Например: сегодня к 18:30" value="${esc(form.time)}"></label>
+      <label>Комментарий<textarea id="f-comment" rows="2" placeholder="Поострее, без лука, позвонить заранее…">${esc(form.comment)}</textarea></label>
+      <button class="submit" id="submit">Отправить заказ · ${rub(t)}</button>
+      <div class="small-print">Оплата при получении. Мы перезвоним, чтобы подтвердить заказ.</div>
+    </div>`;
+}
+
+body.addEventListener("input", e => {
+  const k = e.target.id && e.target.id.replace("f-", "");
+  if (k in form) { form[k] = e.target.value; e.target.classList.remove("err"); }
+});
+
+body.addEventListener("click", e => {
+  const a = e.target.closest("[data-a]");
+  if (a) { change(a.closest(".line").dataset.id, a.dataset.a === "+" ? 1 : -1); return; }
+  const m = e.target.closest("[data-m]");
+  if (m) { mode = m.dataset.m; renderCart(); return; }
+  if (e.target.id === "submit") submit();
+  if (e.target.id === "copy") {
+    navigator.clipboard && navigator.clipboard.writeText(document.getElementById("msg").textContent)
+      .then(() => { e.target.textContent = "Скопировано ✓"; }).catch(() => {});
+  }
+  if (e.target.id === "again") { cart = {}; save(); refresh(); closeSheet(); }
+});
+
+function submit() {
+  const bad = [];
+  if (!form.name.trim()) bad.push("f-name");
+  if (form.phone.replace(/\D/g, "").length < 10) bad.push("f-phone");
+  if (mode === "delivery" && !form.addr.trim()) bad.push("f-addr");
+  if (bad.length) { bad.forEach(id => document.getElementById(id).classList.add("err")); document.getElementById(bad[0]).focus(); return; }
+
+  const t = total();
+  const items = Object.entries(cart).map(([id,q]) => `№${id} ${byId[id].name} × ${q} = ${rub(byId[id].price*q)}`).join("\n");
+  const how = mode === "delivery"
+    ? `🚗 Доставка: ${form.addr.trim()}${t >= FREE ? " (бесплатно)" : " (меньше 2000 ₽, стоимость доставки уточнить)"}`
+    : "🏠 Самовывоз";
+  const msg =
+`🥢 НОВЫЙ ЗАКАЗ С САЙТА
+
+${items}
+
+💰 Итого: ${rub(t)}
+${how}
+⏰ Время: ${form.time.trim() || "как можно скорее"}
+👤 ${form.name.trim()}, ${form.phone.trim()}${form.comment.trim() ? `\n💬 ${form.comment.trim()}` : ""}`;
+
+  isDone = true;
+  body.innerHTML = `
+    <div class="done">
+      <div class="ok">✓</div>
+      <h4>Спасибо, заказ принят!</h4>
+      <p>Мы перезвоним вам в ближайшее время, чтобы подтвердить заказ.</p>
+      <div class="msg-label">Вот так заказ придёт на кухню, в телефон (Макс, Telegram или SMS):</div>
+      <div class="msg" id="msg">${esc(msg)}</div>
+      <button class="ghost" id="copy">Скопировать текст</button>
+      <button class="ghost" id="again">Готово, начать новый заказ</button>
+    </div>`;
+  body.scrollTop = 0; sheet.scrollTop = 0;
+}
+
+if (new Date().getHours() >= 20) document.getElementById("notice").style.display = "block";
+refresh();
+</script>
+</body>
+</html>
