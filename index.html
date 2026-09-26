@@ -538,17 +538,17 @@ body.addEventListener("click", e => {
   if (e.target.id === "again") { cart = {}; save(); refresh(); closeSheet(); }
 });
 
-// Копирует текст; старый способ через textarea нужен для телефонов, где clipboard недоступен
+// Копирует текст. Сначала старый способ через textarea: он срабатывает сразу при нажатии,
+// в том числе во встроенных браузерах Макса и Telegram, где clipboard запрещён
 function copyText(text) {
-  const old = () => {
-    const ta = document.createElement("textarea");
-    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
-    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
-    try { document.execCommand("copy"); } catch (e) {}
-    ta.remove();
-  };
-  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).catch(old);
-  else old();
+  const ta = document.createElement("textarea");
+  ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.top = "0"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, text.length);
+  let ok = false;
+  try { ok = document.execCommand("copy"); } catch (e) {}
+  ta.remove();
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).catch(() => {});
+  return ok;
 }
 
 function submit() {
@@ -585,6 +585,7 @@ ${how}
         <li>Нажмите <b>«Отправить»</b>. Мы перезвоним, чтобы подтвердить заказ</li>
       </ol>
       <a class="max-btn" id="open-max" href="${MAX_CHAT}" target="_blank" rel="noopener">Открыть чат в Максе</a>
+      <a class="call" href="https://max.ru/:share?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Не вставилось? Отправить заказ через Макс по-другому</a>
       <a class="call" href="tel:89502950679">Нет Макса? Позвоните: 8 950 295-06-79</a>
       <div class="msg-label">Текст заказа уже скопирован:</div>
       <div class="msg" id="msg">${esc(msg)}</div>
