@@ -223,6 +223,7 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);border-col
   margin-top:6px;background:var(--red);color:#fff;padding:15px;border-radius:13px;
   font-weight:800;font-size:17px;width:100%
 }
+.clear{margin-top:10px;font-size:13.5px;color:var(--muted);text-decoration:underline;background:none}
 .small-print{font-size:12.5px;color:var(--muted);text-align:center;margin-top:8px}
 
 /* success */
@@ -510,6 +511,7 @@ function renderCart() {
     ${lines}
     <div class="total"><span>Итого</span><span>${rub(t)}</span></div>
     ${note}
+    <button class="clear" id="clear">Очистить корзину</button>
     <div class="form">
       <div class="seg"><button data-m="delivery" class="${mode==="delivery"?"on":""}">Доставка</button><button data-m="pickup" class="${mode==="pickup"?"on":""}">Самовывоз</button></div>
       <label>Ваше имя<input id="f-name" autocomplete="given-name" value="${esc(form.name)}"></label>
@@ -533,6 +535,7 @@ body.addEventListener("click", e => {
   const m = e.target.closest("[data-m]");
   if (m) { mode = m.dataset.m; renderCart(); return; }
   if (e.target.id === "submit") submit();
+  if (e.target.id === "clear" && confirm("Убрать все блюда из корзины?")) { cart = {}; save(); refresh(); closeSheet(); }
   if (e.target.id === "copy") { copyText(document.getElementById("msg").textContent); e.target.textContent = "Скопировано ✓"; }
   if (e.target.id === "open-max") copyText(document.getElementById("msg").textContent);
   if (e.target.id === "again") { cart = {}; save(); refresh(); closeSheet(); }
@@ -590,9 +593,11 @@ ${how}
       <div class="msg-label">Текст заказа уже скопирован:</div>
       <div class="msg" id="msg">${esc(msg)}</div>
       <button class="ghost" id="copy">Скопировать ещё раз</button>
-      <button class="ghost" id="again">Готово, начать новый заказ</button>
+      <button class="ghost" id="again">Закрыть</button>
     </div>`;
   body.scrollTop = 0; sheet.scrollTop = 0;
+  // Заказ оформлен: корзину очищаем, чтобы при следующем открытии сайт был с чистого листа
+  cart = {}; save(); refresh();
 }
 
 if (new Date().getHours() >= 20) document.getElementById("notice").style.display = "block";
