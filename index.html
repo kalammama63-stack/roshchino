@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
 <title>Китайская кухня · Рощино</title>
 <meta name="description" content="Китайская кухня в Рощино — блюда на вынос и доставка. Бесплатная доставка по Рощино при заказе от 2000 ₽.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -239,12 +238,19 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);border-col
   text-align:left;white-space:pre-wrap;font-size:14px;background:#fff;border:1px solid var(--line);
   border-left:4px solid var(--gold);border-radius:12px;padding:14px;line-height:1.5
 }
+.max-btn{
+  display:block;margin-top:16px;background:#5b3cf5;color:#fff;padding:16px;border-radius:13px;
+  font-weight:800;font-size:17px;text-decoration:none;text-align:center
+}
+.steps{text-align:left;margin:14px 0 0;padding-left:22px;font-size:15px;line-height:1.55}
+.steps b{color:var(--red-deep)}
+.call{display:block;margin-top:10px;text-align:center;font-size:14px;color:var(--muted)}
 .ghost{margin-top:14px;padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;font-weight:700;width:100%}
 </style>
 </head>
 <body>
 
-<div class="ribbon">Демо-версия · заказы с этой страницы <b>никуда не отправляются</b></div>
+<div class="ribbon">Демо-версия · заказ уходит в Макс <b>для проверки</b>, не на кухню</div>
 
 <header class="hero">
   <img class="hero-img" src="hero.jpg" alt="Китайская пагода в облаках">
@@ -296,6 +302,8 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);border-col
 </div>
 
 <script>
+// Чат, куда уходят заказы. Для проверки ссылка Тамары, потом заменить на ссылку хозяйки
+const MAX_CHAT = "https://max.ru/u/f9LHodD0cOISP_1pzhAbZj1_jslWi-BFo-tozsbRxAEgIEf9JP3sKwdF2ms";
 const FREE = 2000;
 const MENU = [
  {cat:"Салаты и закуски", items:[
@@ -509,8 +517,8 @@ function renderCart() {
       ${mode==="delivery" ? `<label>Адрес в Рощино<input id="f-addr" autocomplete="street-address" placeholder="Улица, дом" value="${esc(form.addr)}"></label>` : ""}
       <label>${mode==="delivery" ? "К какому времени привезти" : "Когда заберёте"}<input id="f-time" placeholder="Например: сегодня к 18:30" value="${esc(form.time)}"></label>
       <label>Комментарий<textarea id="f-comment" rows="2" placeholder="Поострее, без лука, позвонить заранее…">${esc(form.comment)}</textarea></label>
-      <button class="submit" id="submit">Отправить заказ · ${rub(t)}</button>
-      <div class="small-print">Оплата при получении. Мы перезвоним, чтобы подтвердить заказ.</div>
+      <button class="submit" id="submit">Оформить заказ · ${rub(t)}</button>
+      <div class="small-print">Заказ отправляется через Макс. Оплата при получении.</div>
     </div>`;
 }
 
@@ -525,12 +533,23 @@ body.addEventListener("click", e => {
   const m = e.target.closest("[data-m]");
   if (m) { mode = m.dataset.m; renderCart(); return; }
   if (e.target.id === "submit") submit();
-  if (e.target.id === "copy") {
-    navigator.clipboard && navigator.clipboard.writeText(document.getElementById("msg").textContent)
-      .then(() => { e.target.textContent = "Скопировано ✓"; }).catch(() => {});
-  }
+  if (e.target.id === "copy") { copyText(document.getElementById("msg").textContent); e.target.textContent = "Скопировано ✓"; }
+  if (e.target.id === "open-max") copyText(document.getElementById("msg").textContent);
   if (e.target.id === "again") { cart = {}; save(); refresh(); closeSheet(); }
 });
+
+// Копирует текст; старый способ через textarea нужен для телефонов, где clipboard недоступен
+function copyText(text) {
+  const old = () => {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+    try { document.execCommand("copy"); } catch (e) {}
+    ta.remove();
+  };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).catch(old);
+  else old();
+}
 
 function submit() {
   const bad = [];
@@ -554,15 +573,22 @@ ${how}
 ⏰ Время: ${form.time.trim() || "как можно скорее"}
 👤 ${form.name.trim()}, ${form.phone.trim()}${form.comment.trim() ? `\n💬 ${form.comment.trim()}` : ""}`;
 
+  copyText(msg);
   isDone = true;
   body.innerHTML = `
     <div class="done">
       <div class="ok">✓</div>
-      <h4>Спасибо, заказ принят!</h4>
-      <p>Мы перезвоним вам в ближайшее время, чтобы подтвердить заказ.</p>
-      <div class="msg-label">Вот так заказ придёт на кухню, в телефон (Макс, Telegram или SMS):</div>
+      <h4>Заказ готов, осталось отправить</h4>
+      <ol class="steps">
+        <li>Нажмите кнопку <b>«Открыть чат в Максе»</b></li>
+        <li>В чате нажмите на поле для сообщения и выберите <b>«Вставить»</b></li>
+        <li>Нажмите <b>«Отправить»</b>. Мы перезвоним, чтобы подтвердить заказ</li>
+      </ol>
+      <a class="max-btn" id="open-max" href="${MAX_CHAT}" target="_blank" rel="noopener">Открыть чат в Максе</a>
+      <a class="call" href="tel:89502950679">Нет Макса? Позвоните: 8 950 295-06-79</a>
+      <div class="msg-label">Текст заказа уже скопирован:</div>
       <div class="msg" id="msg">${esc(msg)}</div>
-      <button class="ghost" id="copy">Скопировать текст</button>
+      <button class="ghost" id="copy">Скопировать ещё раз</button>
       <button class="ghost" id="again">Готово, начать новый заказ</button>
     </div>`;
   body.scrollTop = 0; sheet.scrollTop = 0;
