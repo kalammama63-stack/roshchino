@@ -223,7 +223,28 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);border-col
   margin-top:6px;background:var(--red);color:#fff;padding:15px;border-radius:13px;
   font-weight:800;font-size:17px;width:100%
 }
-.clear{margin-top:10px;font-size:13.5px;color:var(--muted);text-decoration:underline;background:none}
+.clear{
+  margin-top:12px;width:100%;padding:12px;border-radius:12px;background:#fff;
+  border:2px solid var(--red-ink);color:var(--red-ink);font-weight:800;font-size:16px
+}
+/* подсказка перед переходом в Макс */
+.done.howto{text-align:left}
+.howto h4{text-align:center}
+.howto .step{display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:16.5px;line-height:1.4}
+.howto .hnum{
+  flex:none;width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;
+  display:grid;place-items:center;font-weight:800;font-size:17px
+}
+.howto b{color:var(--red-deep)}
+.mock{
+  position:relative;margin:34px 0 4px 46px;padding:12px 14px;border:1px solid var(--line);border-radius:22px;
+  background:#fff;color:#aaa;font-size:15px
+}
+.mock .paste{
+  position:absolute;left:18px;top:-30px;background:#222;color:#fff;font-size:14px;font-weight:700;
+  padding:6px 12px;border-radius:8px
+}
+.mock .finger{position:absolute;left:40px;top:14px;font-size:26px}
 .small-print{font-size:12.5px;color:var(--muted);text-align:center;margin-top:8px}
 
 /* success */
@@ -511,7 +532,7 @@ function renderCart() {
     ${lines}
     <div class="total"><span>Итого</span><span>${rub(t)}</span></div>
     ${note}
-    <button class="clear" id="clear">Очистить корзину</button>
+    <button class="clear" id="clear">🗑 Очистить корзину</button>
     <div class="form">
       <div class="seg"><button data-m="delivery" class="${mode==="delivery"?"on":""}">Доставка</button><button data-m="pickup" class="${mode==="pickup"?"on":""}">Самовывоз</button></div>
       <label>Ваше имя<input id="f-name" autocomplete="given-name" value="${esc(form.name)}"></label>
@@ -536,8 +557,8 @@ body.addEventListener("click", e => {
   if (m) { mode = m.dataset.m; renderCart(); return; }
   if (e.target.id === "submit") submit();
   if (e.target.id === "clear" && confirm("Убрать все блюда из корзины?")) { cart = {}; save(); refresh(); closeSheet(); }
-  if (e.target.id === "copy") { copyText(document.getElementById("msg").textContent); e.target.textContent = "Скопировано ✓"; }
-  if (e.target.id === "open-max") copyText(document.getElementById("msg").textContent);
+  if (e.target.id === "copy") { copyText(lastMsg); e.target.textContent = "Скопировано ✓"; }
+  if (e.target.id === "open-max") copyText(lastMsg);
   if (e.target.id === "again") { cart = {}; save(); refresh(); closeSheet(); }
 });
 
@@ -552,6 +573,28 @@ function copyText(text) {
   ta.remove();
   if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).catch(() => {});
   return ok;
+}
+
+let lastMsg = "";
+
+function showHowto() {
+  body.innerHTML = `
+    <div class="done howto">
+      <div class="ok">✓</div>
+      <h4>Заказ готов! Отправьте его нам в Макс</h4>
+      <div class="step"><span class="hnum">1</span><span>В чате <b>нажмите на поле</b> для сообщения <b>и подержите палец</b></span></div>
+      <div class="mock"><span class="paste">Вставить</span>Сообщение<span class="finger">👆</span></div>
+      <div class="step"><span class="hnum">2</span><span>Появится надпись <b>«Вставить»</b>, нажмите её. Заказ появится в поле сам</span></div>
+      <div class="step"><span class="hnum">3</span><span>Нажмите <b>«Отправить»</b>. Мы перезвоним, чтобы подтвердить заказ</span></div>
+      <a class="max-btn" id="open-max" href="${MAX_CHAT}" target="_blank" rel="noopener">Понятно, открыть Макс</a>
+      <a class="call" href="https://max.ru/:share?text=${encodeURIComponent(lastMsg)}" target="_blank" rel="noopener">Не получается вставить? Отправить через Макс по-другому</a>
+      <a class="call" href="tel:89502950679">Нет Макса? Позвоните: 8 950 295-06-79</a>
+      <div class="msg-label">Ваш заказ (уже скопирован):</div>
+      <div class="msg">${esc(lastMsg)}</div>
+      <button class="ghost" id="copy">Скопировать ещё раз</button>
+      <button class="ghost" id="again">Закрыть</button>
+    </div>`;
+  body.scrollTop = 0; sheet.scrollTop = 0;
 }
 
 function submit() {
@@ -576,28 +619,12 @@ ${how}
 ⏰ Время: ${form.time.trim() || "как можно скорее"}
 👤 ${form.name.trim()}, ${form.phone.trim()}${form.comment.trim() ? `\n💬 ${form.comment.trim()}` : ""}`;
 
+  lastMsg = msg;
   copyText(msg);
   isDone = true;
-  body.innerHTML = `
-    <div class="done">
-      <div class="ok">✓</div>
-      <h4>Заказ готов, осталось отправить</h4>
-      <ol class="steps">
-        <li>Нажмите кнопку <b>«Открыть чат в Максе»</b></li>
-        <li>В чате нажмите на поле для сообщения и выберите <b>«Вставить»</b></li>
-        <li>Нажмите <b>«Отправить»</b>. Мы перезвоним, чтобы подтвердить заказ</li>
-      </ol>
-      <a class="max-btn" id="open-max" href="${MAX_CHAT}" target="_blank" rel="noopener">Открыть чат в Максе</a>
-      <a class="call" href="https://max.ru/:share?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Не вставилось? Отправить заказ через Макс по-другому</a>
-      <a class="call" href="tel:89502950679">Нет Макса? Позвоните: 8 950 295-06-79</a>
-      <div class="msg-label">Текст заказа уже скопирован:</div>
-      <div class="msg" id="msg">${esc(msg)}</div>
-      <button class="ghost" id="copy">Скопировать ещё раз</button>
-      <button class="ghost" id="again">Закрыть</button>
-    </div>`;
-  body.scrollTop = 0; sheet.scrollTop = 0;
   // Заказ оформлен: корзину очищаем, чтобы при следующем открытии сайт был с чистого листа
   cart = {}; save(); refresh();
+  showHowto();
 }
 
 if (new Date().getHours() >= 20) document.getElementById("notice").style.display = "block";
