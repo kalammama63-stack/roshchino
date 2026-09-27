@@ -234,6 +234,7 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);border-col
 @keyframes cash-run{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.cash div{animation:none}}
 .done .cash{margin:16px -4px 0;border-radius:10px}
+.cash-note{margin-top:14px;text-align:center;color:var(--red);font-size:20px;font-weight:800;line-height:1.3}
 .small-print{font-size:12.5px;color:var(--muted);text-align:center;margin-top:8px}
 
 /* success */
@@ -262,7 +263,7 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);border-col
 <body>
 
 <div class="ribbon">Пример сайта для вашей кухни · тестовые заказы приходят <b>мне, Тамаре</b></div>
-<div class="cash" aria-label="Оплата только наличными при получении"><div aria-hidden="true"><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span></div></div>
+<div class="cash" aria-label="Оплата только наличными при получении заказа"><div aria-hidden="true"><span>💵 Оплата только наличными при получении заказа</span><span>💵 Оплата только наличными при получении заказа</span><span>💵 Оплата только наличными при получении заказа</span><span>💵 Оплата только наличными при получении заказа</span><span>💵 Оплата только наличными при получении заказа</span><span>💵 Оплата только наличными при получении заказа</span></div></div>
 
 <header class="hero">
   <img class="hero-img" src="hero.jpg" alt="Китайская пагода в облаках">
@@ -531,7 +532,8 @@ function renderCart() {
       <label>${mode==="delivery" ? "К какому времени привезти" : "Когда заберёте"}<input id="f-time" placeholder="Например: сегодня к 18:30" value="${esc(form.time)}"></label>
       <label>Комментарий<textarea id="f-comment" rows="2" placeholder="Поострее, без лука, позвонить заранее…">${esc(form.comment)}</textarea></label>
       <button class="submit" id="submit">Оформить заказ · ${rub(t)}</button>
-      <div class="small-print">Заказ откроется в WhatsApp, останется нажать «Отправить». <b>Оплата только наличными</b> при получении.</div>
+      <div class="cash-note">Оплата только наличными<br>при получении заказа</div>
+      <div class="small-print">Заказ откроется в WhatsApp, останется нажать «Отправить».</div>
     </div>`;
 }
 
@@ -560,11 +562,11 @@ function showDone() {
       <div class="ok">✓</div>
       <h4>Отправьте заказ в WhatsApp</h4>
       <p>WhatsApp откроется с готовым текстом заказа. Нажмите <b>«Отправить»</b>, и мы перезвоним, чтобы подтвердить.</p>
-      <div class="cash" aria-label="Оплата только наличными при получении"><div aria-hidden="true"><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span></div></div>
+      <div class="cash" aria-label="Оплата только наличными при получении заказа"><div aria-hidden="true"><span>💵 Оплата только наличными при получении заказа</span><span>💵 Оплата только наличными при получении заказа</span><span>💵 Оплата только наличными при получении заказа</span><span>💵 Оплата только наличными при получении заказа</span><span>💵 Оплата только наличными при получении заказа</span><span>💵 Оплата только наличными при получении заказа</span></div></div>
       <a class="wa-btn" href="${waLink(lastMsg)}" target="_blank" rel="noopener">Открыть WhatsApp</a>
       <a class="call" href="tel:89502950679">Нет WhatsApp? Позвоните: 8 950 295-06-79</a>
       <div class="msg-label">Ваш заказ:</div>
-      <div class="msg">${esc(lastMsg)}</div>
+      <div class="msg">${esc(lastMsg).replace(/\*([^*\n]+)\*/g, "<b>$1</b>").replace(/_([^_\n]+)_/g, "<i>$1</i>")}</div>
       <button class="ghost" id="again">Закрыть</button>
     </div>`;
   body.scrollTop = 0; sheet.scrollTop = 0;
@@ -578,19 +580,27 @@ function submit() {
   if (bad.length) { bad.forEach(id => document.getElementById(id).classList.add("err")); document.getElementById(bad[0]).focus(); return; }
 
   const t = total();
-  const items = Object.entries(cart).map(([id,q]) => `№${id} ${byId[id].name} × ${q} = ${rub(byId[id].price*q)}`).join("\n");
+  // Без эмодзи: на части телефонов WhatsApp превращает их в «�». *текст* в WhatsApp — жирный
+  const line = "━━━━━━━━━━━━━━";
+  const items = Object.entries(cart).map(([id,q]) => {
+    const d = byId[id];
+    return `• ${d.name} (№${id})\n   ${q > 1 ? `${q} шт. × ${rub(d.price)} = ` : ""}*${rub(d.price*q)}*`;
+  }).join("\n");
   const how = mode === "delivery"
-    ? `🚗 Доставка: ${form.addr.trim()}${t >= FREE ? " (бесплатно)" : " (меньше 2000 ₽, стоимость доставки уточнить)"}`
-    : "🏠 Самовывоз";
+    ? `*Доставка:* ${form.addr.trim()}${t >= FREE ? " (бесплатно)" : "\n_Сумма меньше 2000 ₽, стоимость доставки уточнить_"}`
+    : "*Самовывоз*";
   const msg =
-`🥢 НОВЫЙ ЗАКАЗ С САЙТА
-
+`*НОВЫЙ ЗАКАЗ С САЙТА*
+${line}
 ${items}
+${line}
+*Итого: ${rub(t)}*
+Оплата наличными при получении
 
-💰 Итого: ${rub(t)}
 ${how}
-⏰ Время: ${form.time.trim() || "как можно скорее"}
-👤 ${form.name.trim()}, ${form.phone.trim()}${form.comment.trim() ? `\n💬 ${form.comment.trim()}` : ""}`;
+*Время:* ${form.time.trim() || "как можно скорее"}
+*Имя:* ${form.name.trim()}
+*Телефон:* ${form.phone.trim()}${form.comment.trim() ? `\n*Комментарий:* ${form.comment.trim()}` : ""}`;
 
   lastMsg = msg;
   window.open(waLink(msg), "_blank");
