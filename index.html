@@ -227,24 +227,13 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);border-col
   margin-top:12px;width:100%;padding:12px;border-radius:12px;background:#fff;
   border:2px solid var(--red-ink);color:var(--red-ink);font-weight:800;font-size:16px
 }
-/* подсказка перед переходом в Макс */
-.done.howto{text-align:left}
-.howto h4{text-align:center}
-.howto .step{display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:16.5px;line-height:1.4}
-.howto .hnum{
-  flex:none;width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;
-  display:grid;place-items:center;font-weight:800;font-size:17px
-}
-.howto b{color:var(--red-deep)}
-.mock{
-  position:relative;margin:34px 0 4px 46px;padding:12px 14px;border:1px solid var(--line);border-radius:22px;
-  background:#fff;color:#aaa;font-size:15px
-}
-.mock .paste{
-  position:absolute;left:18px;top:-30px;background:#222;color:#fff;font-size:14px;font-weight:700;
-  padding:6px 12px;border-radius:8px
-}
-.mock .finger{position:absolute;left:40px;top:14px;font-size:26px}
+/* бегущая строка «Оплата только наличными» */
+.cash{overflow:hidden;background:var(--red);color:#fff4d6;font-weight:800;font-size:16px;padding:9px 0;white-space:nowrap}
+.cash div{display:inline-block;animation:cash-run 16s linear infinite}
+.cash span{padding-right:40px}
+@keyframes cash-run{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.cash div{animation:none}}
+.done .cash{margin:16px -4px 0;border-radius:10px}
 .small-print{font-size:12.5px;color:var(--muted);text-align:center;margin-top:8px}
 
 /* success */
@@ -260,8 +249,8 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);border-col
   text-align:left;white-space:pre-wrap;font-size:14px;background:#fff;border:1px solid var(--line);
   border-left:4px solid var(--gold);border-radius:12px;padding:14px;line-height:1.5
 }
-.max-btn{
-  display:block;margin-top:16px;background:#5b3cf5;color:#fff;padding:16px;border-radius:13px;
+.wa-btn{
+  display:block;margin-top:16px;background:#1fa855;color:#fff;padding:16px;border-radius:13px;
   font-weight:800;font-size:17px;text-decoration:none;text-align:center
 }
 .steps{text-align:left;margin:14px 0 0;padding-left:22px;font-size:15px;line-height:1.55}
@@ -273,6 +262,7 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);border-col
 <body>
 
 <div class="ribbon">Пример сайта для вашей кухни · тестовые заказы приходят <b>мне, Тамаре</b></div>
+<div class="cash" aria-label="Оплата только наличными при получении"><div aria-hidden="true"><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span></div></div>
 
 <header class="hero">
   <img class="hero-img" src="hero.jpg" alt="Китайская пагода в облаках">
@@ -324,8 +314,8 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);border-col
 </div>
 
 <script>
-// Чат, куда уходят заказы. Для проверки ссылка Тамары, потом заменить на ссылку хозяйки
-const MAX_CHAT = "https://max.ru/u/f9LHodD0cOISP_1pzhAbZj1_jslWi-BFo-tozsbRxAEgIEf9JP3sKwdF2ms";
+// Номер WhatsApp, куда уходят заказы: слитно, с 7 впереди. Для проверки номер Тамары, потом заменить на номер хозяйки
+const WA_PHONE = "79662864905";
 const FREE = 2000;
 const MENU = [
  {cat:"Салаты и закуски", items:[
@@ -541,7 +531,7 @@ function renderCart() {
       <label>${mode==="delivery" ? "К какому времени привезти" : "Когда заберёте"}<input id="f-time" placeholder="Например: сегодня к 18:30" value="${esc(form.time)}"></label>
       <label>Комментарий<textarea id="f-comment" rows="2" placeholder="Поострее, без лука, позвонить заранее…">${esc(form.comment)}</textarea></label>
       <button class="submit" id="submit">Оформить заказ · ${rub(t)}</button>
-      <div class="small-print">Заказ отправляется через Макс. Оплата при получении.</div>
+      <div class="small-print">Заказ откроется в WhatsApp, останется нажать «Отправить». <b>Оплата только наличными</b> при получении.</div>
     </div>`;
 }
 
@@ -557,41 +547,24 @@ body.addEventListener("click", e => {
   if (m) { mode = m.dataset.m; renderCart(); return; }
   if (e.target.id === "submit") submit();
   if (e.target.id === "clear" && confirm("Убрать все блюда из корзины?")) { cart = {}; save(); refresh(); closeSheet(); }
-  if (e.target.id === "copy") { copyText(lastMsg); e.target.textContent = "Скопировано ✓"; }
-  if (e.target.id === "open-max") copyText(lastMsg);
   if (e.target.id === "again") { cart = {}; save(); refresh(); closeSheet(); }
 });
 
-// Копирует текст. Сначала старый способ через textarea: он срабатывает сразу при нажатии,
-// в том числе во встроенных браузерах Макса и Telegram, где clipboard запрещён
-function copyText(text) {
-  const ta = document.createElement("textarea");
-  ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.top = "0"; ta.style.opacity = "0";
-  document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, text.length);
-  let ok = false;
-  try { ok = document.execCommand("copy"); } catch (e) {}
-  ta.remove();
-  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).catch(() => {});
-  return ok;
-}
-
 let lastMsg = "";
 
-function showHowto() {
+function waLink(text) { return `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(text)}`; }
+
+function showDone() {
   body.innerHTML = `
-    <div class="done howto">
+    <div class="done">
       <div class="ok">✓</div>
-      <h4>Заказ готов! Отправьте его нам в Макс</h4>
-      <div class="step"><span class="hnum">1</span><span>В чате <b>нажмите на поле</b> для сообщения <b>и подержите палец</b></span></div>
-      <div class="mock"><span class="paste">Вставить</span>Сообщение<span class="finger">👆</span></div>
-      <div class="step"><span class="hnum">2</span><span>Появится надпись <b>«Вставить»</b>, нажмите её. Заказ появится в поле сам</span></div>
-      <div class="step"><span class="hnum">3</span><span>Нажмите <b>«Отправить»</b>. Мы перезвоним, чтобы подтвердить заказ</span></div>
-      <a class="max-btn" id="open-max" href="${MAX_CHAT}" target="_blank" rel="noopener">Понятно, открыть Макс</a>
-      <a class="call" href="https://max.ru/:share?text=${encodeURIComponent(lastMsg)}" target="_blank" rel="noopener">Не получается вставить? Отправить через Макс по-другому</a>
-      <a class="call" href="tel:89502950679">Нет Макса? Позвоните: 8 950 295-06-79</a>
-      <div class="msg-label">Ваш заказ (уже скопирован):</div>
+      <h4>Отправьте заказ в WhatsApp</h4>
+      <p>WhatsApp откроется с готовым текстом заказа. Нажмите <b>«Отправить»</b>, и мы перезвоним, чтобы подтвердить.</p>
+      <div class="cash" aria-label="Оплата только наличными при получении"><div aria-hidden="true"><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span><span>💵 Оплата только наличными при получении</span></div></div>
+      <a class="wa-btn" href="${waLink(lastMsg)}" target="_blank" rel="noopener">Открыть WhatsApp</a>
+      <a class="call" href="tel:89502950679">Нет WhatsApp? Позвоните: 8 950 295-06-79</a>
+      <div class="msg-label">Ваш заказ:</div>
       <div class="msg">${esc(lastMsg)}</div>
-      <button class="ghost" id="copy">Скопировать ещё раз</button>
       <button class="ghost" id="again">Закрыть</button>
     </div>`;
   body.scrollTop = 0; sheet.scrollTop = 0;
@@ -620,11 +593,11 @@ ${how}
 👤 ${form.name.trim()}, ${form.phone.trim()}${form.comment.trim() ? `\n💬 ${form.comment.trim()}` : ""}`;
 
   lastMsg = msg;
-  copyText(msg);
+  window.open(waLink(msg), "_blank");
   isDone = true;
   // Заказ оформлен: корзину очищаем, чтобы при следующем открытии сайт был с чистого листа
   cart = {}; save(); refresh();
-  showHowto();
+  showDone();
 }
 
 if (new Date().getHours() >= 20) document.getElementById("notice").style.display = "block";
